@@ -29,18 +29,18 @@ int main(int argc, char const *argv[]) {
   if(listen(listening_sock,5)==-1){
     printf("Failed to listen\n");
   }
-  printf("server is running\n");
-  printf("server is waiting for connections\n");
+  printf("Running!!\n");
+  printf("Waiting for connections!!\n");
   while (1) {
     connection=accept(listening_sock,(struct sockaddr*)NULL,NULL);
-    strcpy(sending_buffer,"you are connected to server");
+    strcpy(sending_buffer,"You are connected to server\n");
     write(connection,sending_buffer,strlen(sending_buffer));
     time_now=time(NULL);
-    snprintf(sending_buffer,sizeof(sending_buffer),"time : %.24s\r\n",ctime(&time_now));
+    snprintf(sending_buffer,sizeof(sending_buffer),"Time : %.24s\r\n\n",ctime(&time_now));
     write(connection,sending_buffer,strlen(sending_buffer));
-    strcpy(sending_buffer,"you can send any text and it will echoed back");
+    strcpy(sending_buffer,"You can send any text and it will echoed back\n");
     write(connection,sending_buffer,strlen(sending_buffer));
-    strcpy(sending_buffer,"sending bye will drop your connection");
+    strcpy(sending_buffer,"sending bye or word starting with bye will drop your connection\n\n");
     write(connection,sending_buffer,strlen(sending_buffer));
     while((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
       if(n<0){
@@ -52,8 +52,14 @@ int main(int argc, char const *argv[]) {
       for(int i=0;i<n;i++){
         receiving_buffer[i]=tolower(receiving_buffer[i]);
       }
-      if(strcmp(receiving_buffer,"bye")==0){
-        printf("you sent bye. dropping connection. bye!!");
+      char subbuff[5];
+      memcpy( subbuff, &receiving_buffer[0], 3 );
+      subbuff[3] = '\0';
+      // receiving_buffer[n-1]='0';
+      // printf("after transform subbuff >%s<\n",subbuff);
+      if(strcmp(subbuff,"bye")==0){
+        strcpy(sending_buffer,"You sent bye. Dropping connection. \nBye!!\n");
+        write(connection,sending_buffer,strlen(sending_buffer));
         close(connection);
       }
     }

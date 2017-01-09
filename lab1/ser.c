@@ -18,7 +18,12 @@ int main(int argc, char const *argv[]) {
   char sending_buffer[1024];
   char receiving_buffer[1024];
   time_t time_now;
-  listening_sock=socket(AF_INET,SOCK_STREAM,0);
+  if((listening_sock = socket(AF_INET, SOCK_STREAM, 0))< 0)
+  {
+    printf("\n Error : Could not create listening socket \n");
+    return 1;
+  }
+  // listening_sock=socket(AF_INET,SOCK_STREAM,0);
   printf("Listening socket created successfully\n");
   memset(sending_buffer,'0',sizeof(sending_buffer));
   memset(receiving_buffer,'0',sizeof(receiving_buffer));
@@ -28,6 +33,7 @@ int main(int argc, char const *argv[]) {
   bind(listening_sock,(struct sockaddr*)&server_address,sizeof(server_address));
   if(listen(listening_sock,5)==-1){
     printf("Failed to listen\n");
+    return -1;
   }
   printf("Running!!\n");
   printf("Waiting for connections!!\n");
@@ -47,7 +53,9 @@ int main(int argc, char const *argv[]) {
         printf("Error receiving from client");
       }
       receiving_buffer[n]=0;
-      printf("client : %s",receiving_buffer);
+      printf("client : \n");
+      puts(receiving_buffer);
+      // printf("client : %s",receiving_buffer);
       write(connection,receiving_buffer,strlen(receiving_buffer));
       for(int i=0;i<n;i++){
         receiving_buffer[i]=tolower(receiving_buffer[i]);
@@ -58,7 +66,7 @@ int main(int argc, char const *argv[]) {
       // receiving_buffer[n-1]='0';
       // printf("after transform subbuff >%s<\n",subbuff);
       if(strcmp(subbuff,"bye")==0){
-        strcpy(sending_buffer,"You sent bye. Dropping connection. \nBye!!\n");
+        strcpy(sending_buffer,"\nYou sent bye. Dropping connection. \nBye!!\n");
         write(connection,sending_buffer,strlen(sending_buffer));
         close(connection);
       }

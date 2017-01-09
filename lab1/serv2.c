@@ -20,7 +20,7 @@ int main(void)
   listenfd = socket(AF_INET, SOCK_STREAM, 0);
   printf("socket retrieve success\n");
 
-  // memset(&serv_addr, '0', sizeof(serv_addr));
+  memset(&serv_addr, '0', sizeof(serv_addr));
   memset(sendBuff, '0', sizeof(sendBuff));
 
   serv_addr.sin_family = AF_INET;

@@ -17,8 +17,7 @@ int main(int argc, char const *argv[]) {
   struct sockaddr_in server_address;
   memset(sending_buffer,'0',sizeof(sending_buffer));
   memset(receiving_buffer,'0',sizeof(receiving_buffer));
-  if((csocket = socket(AF_INET, SOCK_STREAM, 0))< 0)
-  {
+  if((csocket = socket(AF_INET, SOCK_STREAM, 0))< 0){
     printf("\n Error : Could not create socket \n");
     return 1;
   }
@@ -26,54 +25,23 @@ int main(int argc, char const *argv[]) {
   server_address.sin_family = AF_INET;
   server_address.sin_port = htons(5432);
   server_address.sin_addr.s_addr = inet_addr("127.0.0.1");
-  // int connection=0;
-  // connection=connect(csocket, (struct sockaddr *)&server_address, sizeof(server_address));
-  // if(connection<0)
-  if(connect(csocket, (struct sockaddr *)&server_address, sizeof(server_address))<0)
-  {
+  if(connect(csocket, (struct sockaddr *)&server_address, sizeof(server_address))<0){
     printf("\n Error : Connection Failed \n");
     return 1;
   }
-  // printf("%d\n",connection);
   printf("Connected to server\n");
   if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
     if(n<0){
       printf("Error receiving from server.\n");
     }
     receiving_buffer[n]=0;
-    // printf("\nserver : \n");
-    // puts(receiving_buffer);
     printf("server : %s\n",receiving_buffer);
   }
   printf("You can send any text and it will be echoed back by the server\n");
   printf("Sending bye or a word starting with bye will drop your connection\n\n");
-  // for(int i=0;i<2;i++){
-  //   if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-  //     if(n<0){
-  //       printf("Error receiving from server.\n");
-  //     }
-  //     receiving_buffer[n]=0;
-  //     printf("\nserver : \n");
-  //     puts(receiving_buffer);
-  //     // printf("server : \n%s\n",receiving_buffer);
-  //   }
-  // }
-  //testing
-  // printf("hi i am out of loop\n");
-  // if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-  //   if(n<0){
-  //     printf("Error receiving from server.\n");
-  //   }
-  //   receiving_buffer[n]=0;
-  //   printf("\nserver : \n");
-  //   puts(receiving_buffer);
-  //   // printf("server : %s\n",receiving_buffer);
-  // }
   char str[100];
   while(1){
     printf("client > ");
-    // scanf("%s",str);
-    // gets(str);
     fgets(str, sizeof(str), stdin );
     strcpy(sending_buffer,str);
     write(csocket,sending_buffer,strlen(sending_buffer));
@@ -83,8 +51,6 @@ int main(int argc, char const *argv[]) {
       }
       receiving_buffer[n]=0;
       printf("server : %s\n",receiving_buffer);
-      // puts(receiving_buffer);
-      // printf("server : %s\n",receiving_buffer);
     }
     for(int i=0;i<strlen(str);i++){
       str[i]=tolower(str[i]);
@@ -93,17 +59,8 @@ int main(int argc, char const *argv[]) {
     memcpy( subbuff, &str[0], 3 );
     subbuff[3] = '\0';
     if(strcmp(subbuff,"bye")==0){
-      // close(connection);
-      // printf("%d\n",connection);
       return 0;
     }
-    // if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-    //   if(n<0){
-    //     printf("Error receiving from server.\n");
-    //   }
-    //   receiving_buffer[n]=0;
-    //   printf("server : %s\n",receiving_buffer);
-    // }
   }
   return 0;
 }

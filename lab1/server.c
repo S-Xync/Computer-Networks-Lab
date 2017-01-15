@@ -48,7 +48,7 @@ int main(int argc, char const *argv[]) {
     // strcpy(sending_buffer,"You are connected to server\n");
     // write(connection,sending_buffer,strlen(sending_buffer));
     time_now=time(NULL);
-    snprintf(sending_buffer,sizeof(sending_buffer),"Time : %.24s\r\n",ctime(&time_now));
+    snprintf(sending_buffer,sizeof(sending_buffer),"Time --> %.24s\r\n",ctime(&time_now));
     write(connection,sending_buffer,strlen(sending_buffer));
     // strcpy(sending_buffer,"You can send any text and it will echoed back\n");
     // write(connection,sending_buffer,strlen(sending_buffer));

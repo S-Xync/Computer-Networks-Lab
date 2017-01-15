@@ -30,19 +30,22 @@ int main(int argc, char const *argv[]) {
     printf("\n Error : Connect Failed \n");
     return 1;
   }
-  for(int i=0;i<2;i++){
-    if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-      if(n<0){
-        printf("Error receiving from server.\n");
-      }
-      receiving_buffer[n]=0;
-      printf("\nserver : \n");
-      puts(receiving_buffer);
-      // printf("server : \n%s\n",receiving_buffer);
-    }
-  }
+  printf("Connected to server\n");
+  printf("You can send any text and it will echoed back by server\n");
+  printf("Sending bye or a word starting with bye will drop your connection\n\n");
+  // for(int i=0;i<2;i++){
+  //   if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+  //     if(n<0){
+  //       printf("Error receiving from server.\n");
+  //     }
+  //     receiving_buffer[n]=0;
+  //     printf("\nserver : \n");
+  //     puts(receiving_buffer);
+  //     // printf("server : \n%s\n",receiving_buffer);
+  //   }
+  // }
   //testing
-  printf("hi i am out of loop\n");
+  // printf("hi i am out of loop\n");
   // if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
   //   if(n<0){
   //     printf("Error receiving from server.\n");
@@ -55,7 +58,9 @@ int main(int argc, char const *argv[]) {
   char str[100];
   while(1){
     printf("client > ");
-    scanf("%s",str);
+    // scanf("%s",str);
+    // gets(str);
+    fgets( str, sizeof(str), stdin );
     strcpy(sending_buffer,str);
     write(csocket,sending_buffer,strlen(sending_buffer));
     if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
@@ -63,8 +68,8 @@ int main(int argc, char const *argv[]) {
         printf("Error receiving from server.\n");
       }
       receiving_buffer[n]=0;
-      printf("\nserver : \n");
-      puts(receiving_buffer);
+      printf("server : %s\n",receiving_buffer);
+      // puts(receiving_buffer);
       // printf("server : %s\n",receiving_buffer);
     }
     // if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){

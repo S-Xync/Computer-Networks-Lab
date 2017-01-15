@@ -40,24 +40,24 @@ int main(int argc, char const *argv[]) {
   while (1) {
     connection=accept(listening_sock,(struct sockaddr*)NULL,NULL);
     if(connection){
-      printf("Connected to a client\n");
+      printf("Connected to a client!!\n");
     }
-    strcpy(sending_buffer,"You are connected to server\n");
-    write(connection,sending_buffer,strlen(sending_buffer));
-    time_now=time(NULL);
-    snprintf(sending_buffer,sizeof(sending_buffer),"Time : %.24s\r\n\n",ctime(&time_now));
-    write(connection,sending_buffer,strlen(sending_buffer));
-    strcpy(sending_buffer,"You can send any text and it will echoed back\n");
-    write(connection,sending_buffer,strlen(sending_buffer));
-    strcpy(sending_buffer,"sending bye or word starting with bye will drop your connection\n\n");
-    write(connection,sending_buffer,strlen(sending_buffer));
+    // strcpy(sending_buffer,"You are connected to server\n");
+    // write(connection,sending_buffer,strlen(sending_buffer));
+    // time_now=time(NULL);
+    // snprintf(sending_buffer,sizeof(sending_buffer),"Time : %.24s\r\n\n",ctime(&time_now));
+    // write(connection,sending_buffer,strlen(sending_buffer));
+    // strcpy(sending_buffer,"You can send any text and it will echoed back\n");
+    // write(connection,sending_buffer,strlen(sending_buffer));
+    // strcpy(sending_buffer,"sending bye or word starting with bye will drop your connection\n\n");
+    // write(connection,sending_buffer,strlen(sending_buffer));
     while((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
       if(n<0){
         printf("Error receiving from client");
       }
       receiving_buffer[n]=0;
-      printf("\nclient : \n");
-      puts(receiving_buffer);
+      printf("client : %s\n",receiving_buffer);
+      // puts(receiving_buffer);
       // printf("client : %s",receiving_buffer);
       write(connection,receiving_buffer,strlen(receiving_buffer));
       for(int i=0;i<n;i++){

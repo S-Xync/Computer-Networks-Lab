@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <netdb.h>
 #include <errno.h>
+#include <ctype.h>//for lower upper case usage
 
 int main(int argc, char const *argv[]) {
   int csocket=0,n=0;
@@ -21,16 +22,29 @@ int main(int argc, char const *argv[]) {
     printf("\n Error : Could not create socket \n");
     return 1;
   }
-  printf("Socket created successfully\n");
+  printf("\nSocket created successfully\n");
   server_address.sin_family = AF_INET;
   server_address.sin_port = htons(5432);
   server_address.sin_addr.s_addr = inet_addr("127.0.0.1");
+  // int connection=0;
+  // connection=connect(csocket, (struct sockaddr *)&server_address, sizeof(server_address));
+  // if(connection<0)
   if(connect(csocket, (struct sockaddr *)&server_address, sizeof(server_address))<0)
   {
-    printf("\n Error : Connect Failed \n");
+    printf("\n Error : Connection Failed \n");
     return 1;
   }
+  // printf("%d\n",connection);
   printf("Connected to server\n");
+  if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+    if(n<0){
+      printf("Error receiving from server.\n");
+    }
+    receiving_buffer[n]=0;
+    // printf("\nserver : \n");
+    // puts(receiving_buffer);
+    printf("server : %s\n",receiving_buffer);
+  }
   printf("You can send any text and it will echoed back by server\n");
   printf("Sending bye or a word starting with bye will drop your connection\n\n");
   // for(int i=0;i<2;i++){
@@ -60,7 +74,7 @@ int main(int argc, char const *argv[]) {
     printf("client > ");
     // scanf("%s",str);
     // gets(str);
-    fgets( str, sizeof(str), stdin );
+    fgets(str, sizeof(str), stdin );
     strcpy(sending_buffer,str);
     write(csocket,sending_buffer,strlen(sending_buffer));
     if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
@@ -72,6 +86,17 @@ int main(int argc, char const *argv[]) {
       // puts(receiving_buffer);
       // printf("server : %s\n",receiving_buffer);
     }
+    for(int i=0;i<strlen(str);i++){
+      str[i]=tolower(str[i]);
+    }
+    char subbuff[5];
+    memcpy( subbuff, &receiving_buffer[0], 3 );
+    subbuff[3] = '\0';
+    if(strcmp(subbuff,"bye")==0){
+      // close(connection);
+      // printf("%d\n",connection);
+      return 0;
+    }
     // if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
     //   if(n<0){
     //     printf("Error receiving from server.\n");
@@ -82,4 +107,3 @@ int main(int argc, char const *argv[]) {
   }
   return 0;
 }
-//TODO : do the bye thing in client

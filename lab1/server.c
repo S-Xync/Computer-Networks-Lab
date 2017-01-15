@@ -42,14 +42,14 @@ int main(int argc, char const *argv[]) {
     connection=accept(listening_sock,(struct sockaddr*)NULL,NULL);
     if(connection){
       count++;
-      printf("\nConnected to a client!!");
-      printf(" No : %d\n",count);
+      printf("\nConnected to a client No : %d\n",count);
+      // printf(" );
     }
     // strcpy(sending_buffer,"You are connected to server\n");
     // write(connection,sending_buffer,strlen(sending_buffer));
-    // time_now=time(NULL);
-    // snprintf(sending_buffer,sizeof(sending_buffer),"Time : %.24s\r\n\n",ctime(&time_now));
-    // write(connection,sending_buffer,strlen(sending_buffer));
+    time_now=time(NULL);
+    snprintf(sending_buffer,sizeof(sending_buffer),"Time : %.24s\r\n",ctime(&time_now));
+    write(connection,sending_buffer,strlen(sending_buffer));
     // strcpy(sending_buffer,"You can send any text and it will echoed back\n");
     // write(connection,sending_buffer,strlen(sending_buffer));
     // strcpy(sending_buffer,"sending bye or word starting with bye will drop your connection\n\n");
@@ -72,7 +72,8 @@ int main(int argc, char const *argv[]) {
       // receiving_buffer[n-1]='0';
       // printf("after transform subbuff >%s<\n",subbuff);
       if(strcmp(subbuff,"bye")==0){
-        printf("Client sent bye. Dropping client\n");
+        printf("\nClient Sent Bye. Dropped Client No : %d\n\n",count);
+        printf("Waiting for connections!!\n");
         strcpy(sending_buffer,"Sent Bye!! Dropping Connection.\nBye!!\n");
         write(connection,sending_buffer,strlen(sending_buffer));
         close(connection);

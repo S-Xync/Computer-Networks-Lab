@@ -45,7 +45,7 @@ int main(int argc, char const *argv[]) {
     // puts(receiving_buffer);
     printf("server : %s\n",receiving_buffer);
   }
-  printf("You can send any text and it will echoed back by server\n");
+  printf("You can send any text and it will be echoed back by the server\n");
   printf("Sending bye or a word starting with bye will drop your connection\n\n");
   // for(int i=0;i<2;i++){
   //   if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
@@ -90,7 +90,7 @@ int main(int argc, char const *argv[]) {
       str[i]=tolower(str[i]);
     }
     char subbuff[5];
-    memcpy( subbuff, &receiving_buffer[0], 3 );
+    memcpy( subbuff, &str[0], 3 );
     subbuff[3] = '\0';
     if(strcmp(subbuff,"bye")==0){
       // close(connection);

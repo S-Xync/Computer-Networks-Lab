@@ -37,10 +37,13 @@ int main(int argc, char const *argv[]) {
   }
   printf("Running!!\n");
   printf("Waiting for connections!!\n");
+  int count=0;
   while (1) {
     connection=accept(listening_sock,(struct sockaddr*)NULL,NULL);
     if(connection){
-      printf("Connected to a client!!\n");
+      count++;
+      printf("\nConnected to a client!!");
+      printf(" No : %d\n",count);
     }
     // strcpy(sending_buffer,"You are connected to server\n");
     // write(connection,sending_buffer,strlen(sending_buffer));
@@ -56,7 +59,7 @@ int main(int argc, char const *argv[]) {
         printf("Error receiving from client");
       }
       receiving_buffer[n]=0;
-      printf("client : %s\n",receiving_buffer);
+      printf("client : %s",receiving_buffer);
       // puts(receiving_buffer);
       // printf("client : %s",receiving_buffer);
       write(connection,receiving_buffer,strlen(receiving_buffer));
@@ -69,7 +72,8 @@ int main(int argc, char const *argv[]) {
       // receiving_buffer[n-1]='0';
       // printf("after transform subbuff >%s<\n",subbuff);
       if(strcmp(subbuff,"bye")==0){
-        strcpy(sending_buffer,"\nYou sent bye. Dropping connection. \nBye!!\n");
+        printf("Client sent bye. Dropping client\n");
+        strcpy(sending_buffer,"Sent Bye!! Dropping Connection.\nBye!!\n");
         write(connection,sending_buffer,strlen(sending_buffer));
         close(connection);
       }

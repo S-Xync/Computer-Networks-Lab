@@ -82,3 +82,4 @@ int main(int argc, char const *argv[]) {
   }
   return 0;
 }
+//TODO : do the bye thing in client

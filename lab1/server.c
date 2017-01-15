@@ -39,6 +39,9 @@ int main(int argc, char const *argv[]) {
   printf("Waiting for connections!!\n");
   while (1) {
     connection=accept(listening_sock,(struct sockaddr*)NULL,NULL);
+    if(connection){
+      printf("Connected to a client\n");
+    }
     strcpy(sending_buffer,"You are connected to server\n");
     write(connection,sending_buffer,strlen(sending_buffer));
     time_now=time(NULL);
@@ -53,7 +56,7 @@ int main(int argc, char const *argv[]) {
         printf("Error receiving from client");
       }
       receiving_buffer[n]=0;
-      printf("client : \n");
+      printf("\nclient : \n");
       puts(receiving_buffer);
       // printf("client : %s",receiving_buffer);
       write(connection,receiving_buffer,strlen(receiving_buffer));

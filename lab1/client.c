@@ -30,24 +30,28 @@ int main(int argc, char const *argv[]) {
     printf("\n Error : Connect Failed \n");
     return 1;
   }
-  if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-    if(n<0){
-      printf("Error receiving from server.\n");
+  for(int i=0;i<2;i++){
+    if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+      if(n<0){
+        printf("Error receiving from server.\n");
+      }
+      receiving_buffer[n]=0;
+      printf("\nserver : \n");
+      puts(receiving_buffer);
+      // printf("server : \n%s\n",receiving_buffer);
     }
-    receiving_buffer[n]=0;
-    printf("server : \n");
-    puts(receiving_buffer);
-    // printf("server : \n%s\n",receiving_buffer);
   }
-  if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-    if(n<0){
-      printf("Error receiving from server.\n");
-    }
-    receiving_buffer[n]=0;
-    printf("server : \n");
-    puts(receiving_buffer);
-    // printf("server : %s\n",receiving_buffer);
-  }
+  //testing
+  printf("hi i am out of loop\n");
+  // if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+  //   if(n<0){
+  //     printf("Error receiving from server.\n");
+  //   }
+  //   receiving_buffer[n]=0;
+  //   printf("\nserver : \n");
+  //   puts(receiving_buffer);
+  //   // printf("server : %s\n",receiving_buffer);
+  // }
   char str[100];
   while(1){
     printf("client > ");
@@ -59,7 +63,7 @@ int main(int argc, char const *argv[]) {
         printf("Error receiving from server.\n");
       }
       receiving_buffer[n]=0;
-      printf("server : \n");
+      printf("\nserver : \n");
       puts(receiving_buffer);
       // printf("server : %s\n",receiving_buffer);
     }

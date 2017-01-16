@@ -16,19 +16,12 @@ void *connection_handler(void *);//function that handles each thread
 
 int main(int argc, char const *argv[]) {
   int listening_sock=0,client_sock=0,c;
-  // int connection=0;
-  // int n=0;
   struct sockaddr_in server_address,client_address;
-  // char sending_buffer[1024];
-  // char receiving_buffer[1024];
-  // time_t time_now;
   if((listening_sock = socket(AF_INET, SOCK_STREAM, 0))< 0){
     printf("\n Error : Could not create listening socket \n");
     return 1;
   }
   printf("Listening socket created successfully\n");
-  // memset(sending_buffer,'0',sizeof(sending_buffer));
-  // memset(receiving_buffer,'0',sizeof(receiving_buffer));
   server_address.sin_family=AF_INET;
   server_address.sin_addr.s_addr=htonl(INADDR_ANY);
   server_address.sin_port=htons(5432);
@@ -47,8 +40,6 @@ int main(int argc, char const *argv[]) {
       perror("could not create thread");
       return 1;
     }
-    // Now join the thread, so that we dont terminate before the thread
-    // pthread_join( thread_id, NULL);
     puts("Handler assigned");
   }
   if (client_sock < 0) {
@@ -67,8 +58,7 @@ void* connection_handler(void* socket_desc){
   time_t time_now;
   memset(sending_buffer,'0',sizeof(sending_buffer));
   memset(receiving_buffer,'0',sizeof(receiving_buffer));
-  /* random int between 0 and 19 */
-  int r = rand() % 100;
+  int r = rand() % 100;//random int between 0 and 99
   if(connection){
     printf("Connected to the client No : %d\n",r);
   }
@@ -82,28 +72,11 @@ void* connection_handler(void* socket_desc){
     receiving_buffer[n]='\0';
 
     char new_string[1024];
-    // strcpy(new_string,receiving_buffer);
-    // memcpy( new_string, &receiving_buffer[0],n-1);
-    // char temp;
-    // int i, j = 0;
-    // i = 0;
-    // j = strlen(new_string)-1;
-    // while (i < j) {
-    // temp = new_string[i];
-    // new_string[i] = new_string[j];
-    // new_string[j] = temp;
-    // i++;
-    // j--;
-    // }
-    // printf("%s",new_string);
     for(int i=0;i<n-1;i++){
       new_string[i]=receiving_buffer[n-i-2];
     }
     new_string[n-1]='\0';
-    // puts(new_string);
     printf("client %d: %s",r,receiving_buffer);
-    // strcat(receiving_buffer,new_string);
-    // strcpy(sending_buffer,"")
     write(connection,new_string,strlen(new_string));
     for(int i=0;i<n;i++){
       receiving_buffer[i]=tolower(receiving_buffer[i]);
@@ -121,36 +94,3 @@ void* connection_handler(void* socket_desc){
   }
 return 0;
 }
-
-  // while (1) {
-    // connection=accept(listening_sock,(struct sockaddr*)NULL,NULL);
-    // if(connection){
-      // printf("\nConnected to a client\n");
-    // }
-    // time_now=time(NULL);
-    // snprintf(sending_buffer,sizeof(sending_buffer),"Time --> %.24s\r\n",ctime(&time_now));
-    // write(connection,sending_buffer,strlen(sending_buffer));
-  //   while((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-  //     if(n<0){
-  //       printf("Error receiving from client");
-  //     }
-  //     receiving_buffer[n]=0;
-  //     printf("client : %s",receiving_buffer);
-  //     write(connection,receiving_buffer,strlen(receiving_buffer));
-  //     for(int i=0;i<n;i++){
-  //       receiving_buffer[i]=tolower(receiving_buffer[i]);
-  //     }
-  //     char subbuff[5];
-  //     memcpy( subbuff, &receiving_buffer[0], 3 );
-  //     subbuff[3] = '\0';
-  //     if(strcmp(subbuff,"bye")==0){
-  //       printf("\nClient Sent Bye. Dropped Client No : %d\n\n",count);
-  //       printf("Waiting for connections!!\n");
-  //       strcpy(sending_buffer,"Sent Bye!! Dropping Connection.\nBye!!\n");
-  //       write(connection,sending_buffer,strlen(sending_buffer));
-  //       close(connection);
-  //     }
-  //   }
-  // }
-  // return 0;
-// }

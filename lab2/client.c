@@ -37,7 +37,8 @@ int main(int argc, char const *argv[]) {
     receiving_buffer[n]=0;
     printf("server : %s\n",receiving_buffer);
   }
-  printf("You can send any text and it will be echoed back by the server\n");
+  printf("You can send any text\n");
+  printf("The sent text is reversed and changed case and echoed back\n");
   printf("Sending bye or a word starting with bye will drop your connection\n\n");
   char str[100];
   while(1){

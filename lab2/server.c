@@ -70,12 +70,23 @@ void* connection_handler(void* socket_desc){
       printf("Error receiving from client No : %d",r);
     }
     receiving_buffer[n]='\0';
-
+    //reversing string
     char new_string[1024];
     for(int i=0;i<n-1;i++){
       new_string[i]=receiving_buffer[n-i-2];
     }
     new_string[n-1]='\0';
+    //changing case
+    int c = 0;
+    char ch;
+    while (new_string[c] != '\0') {
+      ch = new_string[c];
+      if (ch >= 'A' && ch <= 'Z')
+      new_string[c] = new_string[c] + 32;
+      else if (ch >= 'a' && ch <= 'z')
+      new_string[c] = new_string[c] - 32;
+      c++;
+    }
     printf("client %d: %s",r,receiving_buffer);
     write(connection,new_string,strlen(new_string));
     for(int i=0;i<n;i++){
@@ -92,5 +103,5 @@ void* connection_handler(void* socket_desc){
       close(connection);
     }
   }
-return 0;
+  return 0;
 }

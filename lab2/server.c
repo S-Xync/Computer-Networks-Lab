@@ -11,7 +11,6 @@
 #include <time.h>//for time usage
 #include <ctype.h>//for lower upper case usage
 
-
 int main(int argc, char const *argv[]) {
   int listening_sock=0,connection=0;
   int n=0;

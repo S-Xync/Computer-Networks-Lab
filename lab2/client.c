@@ -10,7 +10,6 @@
 #include <errno.h>
 #include <ctype.h>//for lower upper case usage
 
-
 int main(int argc, char const *argv[]) {
   int csocket=0,n=0;
   char sending_buffer[1024];

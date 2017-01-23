@@ -65,43 +65,7 @@ void* connection_handler(void* socket_desc){
   time_now=time(NULL);
   snprintf(sending_buffer,sizeof(sending_buffer),"No : %d\nTime --> %.24s\r\n",r,ctime(&time_now));
   write(connection,sending_buffer,strlen(sending_buffer));
-  while((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-    if(n<0){
-      printf("Error receiving from client No : %d",r);
-    }
-    receiving_buffer[n]='\0';
-    //reversing string
-    char new_string[1024];
-    for(int i=0;i<n-1;i++){
-      new_string[i]=receiving_buffer[n-i-2];
-    }
-    new_string[n-1]='\0';
-    //changing case
-    int c = 0;
-    char ch;
-    while (new_string[c] != '\0') {
-      ch = new_string[c];
-      if (ch >= 'A' && ch <= 'Z')
-      new_string[c] = new_string[c] + 32;
-      else if (ch >= 'a' && ch <= 'z')
-      new_string[c] = new_string[c] - 32;
-      c++;
-    }
-    printf("client %d: %s",r,receiving_buffer);
-    write(connection,new_string,strlen(new_string));
-    for(int i=0;i<n;i++){
-      receiving_buffer[i]=tolower(receiving_buffer[i]);
-    }
-    char subbuff[5];
-    memcpy( subbuff, &receiving_buffer[0], 3 );
-    subbuff[3] = '\0';
-    if(strcmp(subbuff,"bye")==0){
-      printf("\nClient Sent Bye. Dropped Client No : %d\n\n",r);
-      printf("Waiting for connections!!\n");
-      strcpy(sending_buffer,"\nSent Bye!! Dropping Connection.\nBye!!\n");
-      write(connection,sending_buffer,strlen(sending_buffer));
-      close(connection);
-    }
-  }
+  strcpy(sending_buffer,"dhkjf\n");
+  write(connection,sending_buffer,strlen(sending_buffer));
   return 0;
 }

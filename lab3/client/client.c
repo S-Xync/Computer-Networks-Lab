@@ -30,38 +30,21 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
   printf("Connected to server\n");
-  if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-    if(n<0){
-      printf("Error receiving from server.\n");
-    }
-    receiving_buffer[n]=0;
-    printf("server : %s\n",receiving_buffer);
-  }
-  printf("You can send any text\n");
-  printf("The sent text is reversed and changed case and echoed back\n");
-  printf("Sending bye or a word starting with bye will drop your connection\n\n");
-  char str[100];
   while(1){
-    printf("client > ");
-    fgets(str, sizeof(str), stdin );
-    strcpy(sending_buffer,str);
-    write(csocket,sending_buffer,strlen(sending_buffer));
     if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-      if(n<0){
-        printf("Error receiving from server.\n");
-      }
-      receiving_buffer[n]=0;
-      printf("server : %s\n",receiving_buffer);
-    }
-    for(int i=0;i<strlen(str);i++){
-      str[i]=tolower(str[i]);
-    }
-    char subbuff[5];
-    memcpy( subbuff, &str[0], 3 );
-    subbuff[3] = '\0';
-    if(strcmp(subbuff,"bye")==0){
-      return 0;
+      receiving_buffer[n]='\0';
+      break;
     }
   }
+  printf("%s\n",receiving_buffer);
+  while(1){
+    if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+      receiving_buffer[n]='\0';
+      break;
+    }
+  }
+  printf("%s\n",receiving_buffer);
+
+
   return 0;
 }

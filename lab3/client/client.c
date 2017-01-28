@@ -11,12 +11,26 @@
 #include <ctype.h>//for lower upper case usage
 
 int main(int argc, char const *argv[]) {
+  if(argc!=3){
+    printf("The Input should be of the type below\n");
+    printf("\n**********************************\n");
+    printf("%s <option> <filename>\n",argv[0]);
+    printf("**********************************\n\n");
+    printf("There are two options : \nDownload\nUpload\n");
+  }
   int csocket=0,n=0;
-  char sending_buffer[1024];
-  char receiving_buffer[1024];
+  int sending_buffer_size=1024;
+  int receiving_buffer_size=1024;
+  int temp_buffer_size=1024;
+  char sending_buffer[sending_buffer_size];
+  char receiving_buffer[receiving_buffer_size];
+  char temp_buffer[temp_buffer_size];
+  FILE *fp;
+  char ch;
   struct sockaddr_in server_address;
   memset(sending_buffer,'0',sizeof(sending_buffer));
   memset(receiving_buffer,'0',sizeof(receiving_buffer));
+  memset(temp_buffer,'0',sizeof(temp_buffer));
   if((csocket = socket(AF_INET, SOCK_STREAM, 0))< 0){
     printf("\n Error : Could not create socket \n");
     return 1;
@@ -30,21 +44,109 @@ int main(int argc, char const *argv[]) {
     return 1;
   }
   printf("Connected to server\n");
-  while(1){
-    if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-      receiving_buffer[n]='\0';
-      break;
+  if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+    if(n<0){
+      printf("Error recieving from server\n");
     }
   }
-  printf("%s\n",receiving_buffer);
-  while(1){
+  receiving_buffer[n]='\0';
+  printf("%s\n",receiving_buffer);//receives date and time
+
+  //downloading code
+  if(strcasecmp(argv[1],"download")==0){
+    strcpy(sending_buffer,"download");
+    write(csocket,sending_buffer,strlen(sending_buffer));
+    printf("The file to download is : %s",argv[2]);
+    strcpy(sending_buffer,argv[2]);
+    write(csocket,sending_buffer,strlen(sending_buffer));
+    fflush(stdout);
     if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-      receiving_buffer[n]='\0';
-      break;
+      if(n<0){
+        printf("Error recieving from server\n");
+      }
     }
+    receiving_buffer[n]='\0';
+    if(strcmp(receiving_buffer,"yes")==0){
+      printf("File %s available on server\n",argv[2]);
+      printf("Downloading......\n");
+      fflush(stdout);
+      if(fp=fopen(argv[2],"w")){
+        printf("File %s created successfully\n",argv[2]);
+        fflush(stdout);
+      }else{
+        printf("Unable to create file %s",argv[2]);
+        fflush(stdout);
+      }
+      while((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+        if(n<0){
+          printf("Error recieving from server\n");
+        }
+        ch=receiving_buffer[n-1];
+        receiving_buffer[n-1]='\0';
+        fprintf(fp,"%s",receiving_buffer);
+        fflush(fp);
+        if(ch=='#'){
+          printf("#");
+          fflush(stdout);
+        }else{
+          printf("File %s downloaded successfully\n",argv[2]);
+          fflush(stdout);
+          break;
+        }
+      }
+      fclose(fp);
+    }else{
+      printf("File %s not available on server\n",argv[2]);
+      fflush(stdout);
+    }
+
   }
-  printf("%s\n",receiving_buffer);
+
+  //uploading code
+  else if(strcasecmp(argv[1],"upload")==0){
+    strcpy(sending_buffer,"upload");
+    write(csocket,sending_buffer,strlen(sending_buffer));
+  }
+
+  //not upload or download
+  else{
+    printf("Not able to understand your option\n");
+    printf("\nThe Input should be of the type below\n");
+    printf("\n**********************************\n");
+    printf("%s <option> <filename>\n",argv[0]);
+    printf("**********************************\n\n");
+    printf("There are two options : \nDownload\nUpload\n");
+  }
 
 
   return 0;
 }
+
+
+
+
+
+// while(1){//start of while loop
+//   if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+//     if(n<0){
+//       printf("Error recieving from server\n");
+//     }
+//   }
+//   receiving_buffer[n]='\0';
+//   printf("%s\n",receiving_buffer);//receives date and time
+//   if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+//     if(n<0){
+//       printf("Error receiving from server\n");
+//     }
+//   }
+//   receiving_buffer[n]='\0';
+//   printf("%s",receiving_buffer);//receives options
+//   fflush(stdout);
+//   char_option=getchar();
+//   option=(int) char_option;
+//   printf("syufdbj\n");
+//   snprintf(sending_buffer,sizeof(sending_buffer),"%d",option);
+//   write(csocket,sending_buffer,strlen(sending_buffer));//sends user option
+//   printf("user option sent\n");
+//   return 0;
+// }//end of while loop

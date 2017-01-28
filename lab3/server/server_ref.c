@@ -52,13 +52,9 @@ int main(int argc, char const *argv[]) {
 
 void* connection_handler(void* socket_desc){
   int connection =*(int*)socket_desc;
-  int sending_buffer_size=1024;
-  int receiving_buffer_size=1024;
-  char sending_buffer[sending_buffer_size];
-  char receiving_buffer[receiving_buffer_size];
+  char sending_buffer[1024];
+  char receiving_buffer[1024];
   int n=0;
-  FILE *fp;
-  char ch;
   time_t time_now;
   memset(sending_buffer,'0',sizeof(sending_buffer));
   memset(receiving_buffer,'0',sizeof(receiving_buffer));
@@ -68,84 +64,44 @@ void* connection_handler(void* socket_desc){
   }
   time_now=time(NULL);
   snprintf(sending_buffer,sizeof(sending_buffer),"No : %d\nTime --> %.24s\r\n",r,ctime(&time_now));
-  write(connection,sending_buffer,strlen(sending_buffer));//sends date and time
-  if((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+  write(connection,sending_buffer,strlen(sending_buffer));
+  while((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
     if(n<0){
       printf("Error receiving from client No : %d",r);
     }
-  }
-  receiving_buffer[n]='\0';
-
-//downloading code
-  if(strcmp(receiving_buffer,"download")==0){
-    printf("Downloading process Begins..\n");
-    fflush(stdout);
-    if((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-      if(n<0){
-        printf("Error receiving from client No : %d",r);
-      }
-    }
     receiving_buffer[n]='\0';
-    if(fp=fopen(receiving_buffer,"r")){
-      printf("Opened file %s in reading mode\n",receiving_buffer);
-      strcpy(sending_buffer,"yes");
+    //reversing string
+    char new_string[1024];
+    for(int i=0;i<n-1;i++){
+      new_string[i]=receiving_buffer[n-i-2];
+    }
+    new_string[n-1]='\0';
+    //changing case
+    int c = 0;
+    char ch;
+    while (new_string[c] != '\0') {
+      ch = new_string[c];
+      if (ch >= 'A' && ch <= 'Z')
+      new_string[c] = new_string[c] + 32;
+      else if (ch >= 'a' && ch <= 'z')
+      new_string[c] = new_string[c] - 32;
+      c++;
+    }
+    printf("client %d: %s",r,receiving_buffer);
+    write(connection,new_string,strlen(new_string));
+    for(int i=0;i<n;i++){
+      receiving_buffer[i]=tolower(receiving_buffer[i]);
+    }
+    char subbuff[5];
+    memcpy( subbuff, &receiving_buffer[0], 3 );
+    subbuff[3] = '\0';
+    if(strcmp(subbuff,"bye")==0){
+      printf("\nClient Sent Bye. Dropped Client No : %d\n\n",r);
+      printf("Waiting for connections!!\n");
+      strcpy(sending_buffer,"\nSent Bye!! Dropping Connection.\nBye!!\n");
       write(connection,sending_buffer,strlen(sending_buffer));
-      fflush(stdout);
-      int i=0;
-      while(1){
-        for(i=0;i<sending_buffer_size-10;i++){
-          ch=getc(fp);
-          if(ch!=EOF){
-            sending_buffer[i]=ch;
-          }else if(ch==EOF){
-            break;
-          }
-        }
-        if(ch==EOF){
-          sending_buffer[i]='-';
-          sending_buffer[i+1]='\0';
-        }else{
-          sending_buffer[i]='#';
-          sending_buffer[i+1]='\0';
-        }
-        write(connection,sending_buffer,strlen(sending_buffer));
-        if(ch==EOF){
-          break;
-        }
-      }
-      printf("Succesfully sent the requested file to the client %d",r);
-      fflush(stdout);
       close(connection);
-    }else{
-      printf("Unable to open the file %s in reading mode\n",receiving_buffer);
-      strcpy(sending_buffer,"no");
-      write(connection,sending_buffer,strlen(sending_buffer));
-      fflush(stdout);
     }
   }
-
-//uploading code
-  else if(strcmp(receiving_buffer,"upload")==0){
-    printf("Uploading process Begins..\n");
-    fflush(stdout);
-  }
-  fflush(stdout);
   return 0;
 }
-
-
-
-
-
-
-
-// strcpy(sending_buffer,"\nDo you want to :\n1. Upload\n2. Download\nGive Input : ");
-// write(connection,sending_buffer,strlen(sending_buffer));//sends options
-// if((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-//   if(n<0){
-//     printf("Error receiving from client No : %d",r);
-//   }
-// }
-// receiving_buffer[n]='\0';
-// printf("%s\n",receiving_buffer);//receives user option
-// printf("sdygf\n");

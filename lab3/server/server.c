@@ -76,7 +76,7 @@ void* connection_handler(void* socket_desc){
   }
   receiving_buffer[n]='\0';
 
-//downloading code
+  //downloading code
   if(strcmp(receiving_buffer,"download")==0){
     printf("Downloading process Begins..\n");
     fflush(stdout);
@@ -87,7 +87,7 @@ void* connection_handler(void* socket_desc){
     }
     receiving_buffer[n]='\0';
     if(fp=fopen(receiving_buffer,"r")){
-      printf("Opened file %s in reading mode\n",receiving_buffer);
+      printf("Opened file %s in reading mode for client No : %d\n",receiving_buffer,r);
       strcpy(sending_buffer,"yes");
       write(connection,sending_buffer,strlen(sending_buffer));
       fflush(stdout);
@@ -113,9 +113,8 @@ void* connection_handler(void* socket_desc){
           break;
         }
       }
-      printf("Succesfully sent the requested file to the client %d",r);
+      printf("Successfully sent the requested file to the client No : %d",r);
       fflush(stdout);
-      close(connection);
     }else{
       printf("Unable to open the file %s in reading mode\n",receiving_buffer);
       strcpy(sending_buffer,"no");
@@ -124,12 +123,47 @@ void* connection_handler(void* socket_desc){
     }
   }
 
-//uploading code
+  //uploading code
   else if(strcmp(receiving_buffer,"upload")==0){
-    printf("Uploading process Begins..\n");
+    printf("Uploading process begins by client NO :  %d\n",r);
     fflush(stdout);
+    if((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+      if(n<0){
+        printf("Error receiving from client No : %d",r);
+      }
+    }
+    receiving_buffer[n]='\0';
+    if(fp=fopen(receiving_buffer,"w")){
+      printf("Created file %s in writing mode by client No : %d\n",receiving_buffer,r);
+      strcpy(sending_buffer,"yes");
+      write(connection,sending_buffer,strlen(sending_buffer));
+      fflush(stdout);
+      while((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+        if(n<0){
+          printf("Error recieving from client No : %d\n",r);
+        }
+        ch=receiving_buffer[n-1];
+        receiving_buffer[n-1]='\0';
+        fprintf(fp,"%s",receiving_buffer);
+        fflush(fp);
+        if(ch=='#'){
+          printf("#");
+          fflush(stdout);
+        }else{
+          printf("File uploaded successfully by client No : %d\n",r);
+          fflush(stdout);
+          break;
+        }
+      }
+      fclose(fp);
+
+    }else{
+      printf("Coundn't create file %s in writing mode for client No : %d\n",receiving_buffer,r);
+
+    }
   }
   fflush(stdout);
+  close(connection);
   return 0;
 }
 

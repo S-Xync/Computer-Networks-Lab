@@ -21,16 +21,13 @@ int main(int argc, char const *argv[]) {
   int csocket=0,n=0;
   int sending_buffer_size=1024;
   int receiving_buffer_size=1024;
-  int temp_buffer_size=1024;
   char sending_buffer[sending_buffer_size];
   char receiving_buffer[receiving_buffer_size];
-  char temp_buffer[temp_buffer_size];
   FILE *fp;
   char ch;
   struct sockaddr_in server_address;
   memset(sending_buffer,'0',sizeof(sending_buffer));
   memset(receiving_buffer,'0',sizeof(receiving_buffer));
-  memset(temp_buffer,'0',sizeof(temp_buffer));
   if((csocket = socket(AF_INET, SOCK_STREAM, 0))< 0){
     printf("\n Error : Could not create socket \n");
     return 1;
@@ -73,28 +70,28 @@ int main(int argc, char const *argv[]) {
       if(fp=fopen(argv[2],"w")){
         printf("File %s created successfully\n",argv[2]);
         fflush(stdout);
+        while((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+          if(n<0){
+            printf("Error recieving from server\n");
+          }
+          ch=receiving_buffer[n-1];
+          receiving_buffer[n-1]='\0';
+          fprintf(fp,"%s",receiving_buffer);
+          fflush(fp);
+          if(ch=='#'){
+            printf("#");
+            fflush(stdout);
+          }else{
+            printf("File %s downloaded successfully\n",argv[2]);
+            fflush(stdout);
+            break;
+          }
+        }
+        fclose(fp);
       }else{
-        printf("Unable to create file %s",argv[2]);
+        printf("Unable to create file %s\n",argv[2]);
         fflush(stdout);
       }
-      while((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-        if(n<0){
-          printf("Error recieving from server\n");
-        }
-        ch=receiving_buffer[n-1];
-        receiving_buffer[n-1]='\0';
-        fprintf(fp,"%s",receiving_buffer);
-        fflush(fp);
-        if(ch=='#'){
-          printf("#");
-          fflush(stdout);
-        }else{
-          printf("File %s downloaded successfully\n",argv[2]);
-          fflush(stdout);
-          break;
-        }
-      }
-      fclose(fp);
     }else{
       printf("File %s not available on server\n",argv[2]);
       fflush(stdout);
@@ -106,6 +103,54 @@ int main(int argc, char const *argv[]) {
   else if(strcasecmp(argv[1],"upload")==0){
     strcpy(sending_buffer,"upload");
     write(csocket,sending_buffer,strlen(sending_buffer));
+    printf("The file to upload is : %s",argv[2]);
+    strcpy(sending_buffer,argv[2]);
+    write(csocket,sending_buffer,strlen(sending_buffer));
+    fflush(stdout);
+    if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+      if(n<0){
+        printf("Error recieving from server\n");
+      }
+    }
+    receiving_buffer[n]='\0';
+    if(strcmp(receiving_buffer,"yes")==0){
+      printf("File %s created in server\n",argv[2]);
+      printf("Uploading......\n");
+      fflush(stdout);
+      if(fp=fopen(argv[2],"r")){
+        printf("File %s opened successfully in reading mode\n",argv[2]);
+        fflush(stdout);
+      }else{
+        printf("Unable to open file %s in reading mode\n",argv[2]);
+        fflush(stdout);
+      }
+      int i=0;
+      while(1){
+        for(i=0;i<sending_buffer_size-10;i++){
+          ch=getc(fp);
+          if(ch!=EOF){
+            sending_buffer[i]=ch;
+          }else if(ch==EOF){
+            break;
+          }
+        }
+        if(ch==EOF){
+          sending_buffer[i]='-';
+          sending_buffer[i+1]='\0';
+        }else{
+          sending_buffer[i]='#';
+          sending_buffer[i+1]='\0';
+        }
+        write(csocket,sending_buffer,strlen(sending_buffer));
+        if(ch==EOF){
+          break;
+        }
+      }
+      printf("Successfully uploaded %s to the server\n",argv[2]);
+      fflush(stdout);
+    }else{
+      printf("File %s not created in server\n",argv[2]);
+    }
   }
 
   //not upload or download
@@ -117,36 +162,7 @@ int main(int argc, char const *argv[]) {
     printf("**********************************\n\n");
     printf("There are two options : \nDownload\nUpload\n");
   }
-
-
+  fflush(stdout);
+  close(csocket);
   return 0;
 }
-
-
-
-
-
-// while(1){//start of while loop
-//   if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-//     if(n<0){
-//       printf("Error recieving from server\n");
-//     }
-//   }
-//   receiving_buffer[n]='\0';
-//   printf("%s\n",receiving_buffer);//receives date and time
-//   if((n=read(csocket,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-//     if(n<0){
-//       printf("Error receiving from server\n");
-//     }
-//   }
-//   receiving_buffer[n]='\0';
-//   printf("%s",receiving_buffer);//receives options
-//   fflush(stdout);
-//   char_option=getchar();
-//   option=(int) char_option;
-//   printf("syufdbj\n");
-//   snprintf(sending_buffer,sizeof(sending_buffer),"%d",option);
-//   write(csocket,sending_buffer,strlen(sending_buffer));//sends user option
-//   printf("user option sent\n");
-//   return 0;
-// }//end of while loop

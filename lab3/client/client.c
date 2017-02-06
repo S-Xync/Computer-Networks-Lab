@@ -25,7 +25,7 @@ int main(int argc, char const *argv[]) {
   char sending_buffer[sending_buffer_size];
   char receiving_buffer[receiving_buffer_size];
   FILE *fp;
-  char ch;
+  char ch='#';
   struct sockaddr_in server_address;
   memset(sending_buffer,'0',sizeof(sending_buffer));
   memset(receiving_buffer,'0',sizeof(receiving_buffer));
@@ -104,7 +104,7 @@ int main(int argc, char const *argv[]) {
   else if(strcasecmp(argv[1],"upload")==0){
     strcpy(sending_buffer,"upload");
     write(csocket,sending_buffer,strlen(sending_buffer));
-    printf("The file to upload is : %s",argv[2]);
+    printf("The file to upload is : %s\n",argv[2]);
     strcpy(sending_buffer,argv[2]);
     write(csocket,sending_buffer,strlen(sending_buffer));
     fflush(stdout);

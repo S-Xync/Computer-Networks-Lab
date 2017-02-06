@@ -113,7 +113,7 @@ void* connection_handler(void* socket_desc){
           break;
         }
       }
-      printf("Successfully sent the requested file to the client No : %d",r);
+      printf("Successfully sent the requested file to the client No : %d\n",r);
       fflush(stdout);
     }else{
       printf("Unable to open the file %s in reading mode\n",receiving_buffer);
@@ -129,7 +129,7 @@ void* connection_handler(void* socket_desc){
     fflush(stdout);
     if((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
       if(n<0){
-        printf("Error receiving from client No : %d",r);
+        printf("Error receiving from client No : %d\n",r);
       }
     }
     receiving_buffer[n]='\0';
@@ -138,21 +138,23 @@ void* connection_handler(void* socket_desc){
       strcpy(sending_buffer,"yes");
       write(connection,sending_buffer,strlen(sending_buffer));
       fflush(stdout);
-      while((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-        if(n<0){
-          printf("Error recieving from client No : %d\n",r);
-        }
-        ch=receiving_buffer[n-1];
-        receiving_buffer[n-1]='\0';
-        fprintf(fp,"%s",receiving_buffer);
-        fflush(fp);
-        if(ch=='#'){
-          printf("#");
-          fflush(stdout);
-        }else{
-          printf("File uploaded successfully by client No : %d\n",r);
-          fflush(stdout);
-          break;
+      while(1){
+        while((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+          if(n<0){
+            printf("Error recieving from client No : %d\n",r);
+          }
+          ch=receiving_buffer[n-1];
+          receiving_buffer[n-1]='\0';
+          fprintf(fp,"%s",receiving_buffer);
+          fflush(fp);
+          if(ch=='#'){
+            printf("#");
+            fflush(stdout);
+          }else{
+            printf("File uploaded successfully by client No : %d\n",r);
+            fflush(stdout);
+            break;
+          }
         }
       }
       fclose(fp);
@@ -166,20 +168,3 @@ void* connection_handler(void* socket_desc){
   close(connection);
   return 0;
 }
-
-
-
-
-
-
-
-// strcpy(sending_buffer,"\nDo you want to :\n1. Upload\n2. Download\nGive Input : ");
-// write(connection,sending_buffer,strlen(sending_buffer));//sends options
-// if((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-//   if(n<0){
-//     printf("Error receiving from client No : %d",r);
-//   }
-// }
-// receiving_buffer[n]='\0';
-// printf("%s\n",receiving_buffer);//receives user option
-// printf("sdygf\n");

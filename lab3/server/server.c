@@ -138,23 +138,21 @@ void* connection_handler(void* socket_desc){
       strcpy(sending_buffer,"yes");
       write(connection,sending_buffer,strlen(sending_buffer));
       fflush(stdout);
-      while(1){
-        while((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
-          if(n<0){
-            printf("Error recieving from client No : %d\n",r);
-          }
-          ch=receiving_buffer[n-1];
-          receiving_buffer[n-1]='\0';
-          fprintf(fp,"%s",receiving_buffer);
-          fflush(fp);
-          if(ch=='#'){
-            printf("#");
-            fflush(stdout);
-          }else{
-            printf("File uploaded successfully by client No : %d\n",r);
-            fflush(stdout);
-            break;
-          }
+      while((n=read(connection,receiving_buffer,sizeof(receiving_buffer)-1))>0){
+        if(n<0){
+          printf("Error recieving from client No : %d\n",r);
+        }
+        ch=receiving_buffer[n-1];
+        receiving_buffer[n-1]='\0';
+        fprintf(fp,"%s",receiving_buffer);
+        fflush(fp);
+        if(ch=='#'){
+          printf("#");
+          fflush(stdout);
+        }else{
+          printf("File uploaded successfully by client No : %d\n",r);
+          fflush(stdout);
+          break;
         }
       }
       fclose(fp);

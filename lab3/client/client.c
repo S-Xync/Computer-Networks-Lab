@@ -17,6 +17,7 @@ int main(int argc, char const *argv[]) {
     printf("%s <option> <filename>\n",argv[0]);
     printf("**********************************\n\n");
     printf("There are two options : \nDownload\nUpload\n");
+    return 0;
   }
   int csocket=0,n=0;
   int sending_buffer_size=1024;
@@ -53,7 +54,7 @@ int main(int argc, char const *argv[]) {
   if(strcasecmp(argv[1],"download")==0){
     strcpy(sending_buffer,"download");
     write(csocket,sending_buffer,strlen(sending_buffer));
-    printf("The file to download is : %s",argv[2]);
+    printf("The file to download is : %s\n",argv[2]);
     strcpy(sending_buffer,argv[2]);
     write(csocket,sending_buffer,strlen(sending_buffer));
     fflush(stdout);
@@ -161,6 +162,7 @@ int main(int argc, char const *argv[]) {
     printf("%s <option> <filename>\n",argv[0]);
     printf("**********************************\n\n");
     printf("There are two options : \nDownload\nUpload\n");
+    return 0;
   }
   fflush(stdout);
   close(csocket);

@@ -1,0 +1,21 @@
+www.iiitg.ac.in/
+
+ARP
+DNS
+HTTP
+ICMP
+NTP
+QUIC
+TCP
+TLSv1.2
+
+my local ip 192.168.43.140
+my public ip 47.29.133.247
+server's static ip 14.139.196.29
+
+GET at 10:31:54.544946709
+OK at 10:31:55.413393139
+The time gap is 0.86844643s
+
+wireshark_wlp6s0_20170306103153_5COxYPGETiiitg.ac.in.pdf
+wireshark_wlp6s0_20170306103153_5COxYPOKiiitg.ac.in.pdf

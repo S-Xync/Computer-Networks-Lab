@@ -1,0 +1,9 @@
+Use traceroute command (instal with sudo apt-get install traceoute) and send UDP datagram to google.com (institute proxy may not allow you to connect, so use other host machine IP) with varying datagram sizes of 500bytes, 2000, 3500 bytes. Use wireshark to captute the ICMP packets and analyze them to answer the following:
+
+1. Select the first ICMP Echo Request message sent by your computer, and expand the Internet Protocol part of the packet in the packet details window. What is the IP address of your computer? 
+
+2. How many bytes are in the IP header? How many bytes are in the payload of the IP datagram? 
+
+3. Has this IP datagram been fragmented? Explain how you determined whether or not the datagram has been fragmented.
+
+4. What is the value in the Identification field and the TTL field? Do these values remain unchanged for all of the ICMP TTL-exceeded replies sent to your computer by the nearest (first hop) router? Why?

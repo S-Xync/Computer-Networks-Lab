@@ -1,0 +1,12 @@
+1.
+192.168.43.140
+2.1.
+20,472
+3.1.
+Not fragmented, flags: 0x00, fragment offset: 0
+4.
+Identification field is incrementing for every packet. but ttl is same
+4.1
+0xa307, 1	
+4.2
+

@@ -1,0 +1,28 @@
+1.
+client Dell
+00:19:b9:17:69:65
+server Intel
+00:04:23:9f:5b:62
+
+2.
+client
+131.128.51.4
+server
+131.128.51.63
+
+3.
+13
+
+4.
+30
+
+5.
+16,19,21,23,25,27,29
+
+6.
+frame - 150
+ethernet - 14
+smtp - 84
+
+7.
+'X-ELE437: yes' header would not be transmitted.

@@ -1,0 +1,49 @@
+The packet in consideration is the 34th packet from previous lab's capture file.
+
+The contents of Ip header are
+
+45 00 00 34 0e 2f 40 00 40 06 bf 51 83 80 33 3f 83 80 33 04
+
+Now we have to consider two each and add them and then the carried number will be added back to the sum
+
+45+00=45
+
+45+00=45
+
+45+34=79
+
+79+0e=87
+
+87+2f=b6
+
+b6+40=f6
+
+f6+06=fc
+
+fc+bf=1bb
+
+bb+1=bc
+
+bc+51=10d
+
+0d+1=0e
+
+0e+83=91
+
+91+80=111
+
+11+1=12
+
+12+33=45
+
+45+3f=84
+
+84+83=107
+
+07+1=08
+
+08+80=88
+
+80+33=bb
+
+bb+04=bf

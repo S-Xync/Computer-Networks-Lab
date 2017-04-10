@@ -25,4 +25,9 @@ ethernet - 14
 smtp - 84
 
 7.
+In frame 1
+Frame Length : 74 bytes
+Ethernet Header Length : 14 bytes
+
+8.
 'X-ELE437: yes' header would not be transmitted.

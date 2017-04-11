@@ -9,5 +9,10 @@ set namfile [open out.nam w]
 $ns namtrace-all $namfile
 
 proc finish {} {
-	global 
+	global ns tracefile namfile
+	$ns flush-trace
+	close $tracefile
+	close $namfile
+	exec 
+
 }

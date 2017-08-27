@@ -1,0 +1,32 @@
+1.
+The Source IP address is 192.168.1.101
+ICMP (1)
+
+2.
+Given the total length of IP datagram is 60 bytes
+IP header length is 20 bytes
+
+IP datagram length = IP header length + IP payload length
+so the payload is of 40 bytes
+
+3.
+The packet has not been fragmented. This can be told from the fragment offset as the value of fragment offset is 0 and if the packet has been fragmented, the fragment offset would not be set to 0. And also in the flags of IP header, more fragments flag is not set. And also the Don't fragment flag is set 
+
+4.
+must change
+header checksum
+sequence number
+identification field
+
+must stay constant
+time to live
+protocol version
+header length 
+
+5.
+The identification field is being incremented with value 1 on server side and also client side.
+for example 
+on client side,
+53757, 53758,....
+on server side,
+45923, 45924,....
